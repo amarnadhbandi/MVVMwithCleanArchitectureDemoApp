@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">DemoApplication</string>
+    <string name="loading_list">Loading comments…</string>
+    <string name="country_list">Country list</string>
+    <string name="loading_products">Loading products…</string>
+    <string name="search_products_hint">Search Products…</string>
+    <string name="cd_products_list">Products list</string>
+    <string name="cd_comments_list">Comments list</string>
+    <string name="cd_country_name">Name of the product</string>
+    <string name="cd_country_region">Name of the product</string>
+    <string name="cd_country_code">Name of the product</string>
+    <string name="cd_country_capital">Name of the product</string>
+
+    <string name="cd_search_products">Search products</string>
+</resources>
