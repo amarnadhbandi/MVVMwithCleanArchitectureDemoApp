@@ -9,7 +9,7 @@ import com.demo.app.countries_list.data.local.entity.LanguageEntity
 
 object DomainToEntityMapper {
 
-    fun Country.toEntity(): CountryEntity {
+    private fun Country.toEntity(): CountryEntity {
         return CountryEntity(
             capital = this.capital,
             code = this.code,

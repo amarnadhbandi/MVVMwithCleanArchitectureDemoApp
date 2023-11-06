@@ -8,8 +8,9 @@ object Constants {
     const val API_CALL_FAILED = "Api call failed with"
     const val API_REQUEST_FAILED_MAX_TRIES = "Network request failed after max retries"
     const val APP_CONTAINER_NOT_INIT = "AppContainer is not initialized."
-    const val EXCEPTION_EMPTY_LIST = "Empty product list"
+    const val EXCEPTION_EMPTY_LIST = "Empty country list"
     const val EXCEPTION_HANDLED = "Exception handled"
+    const val COMMA_OPERATOR = ", "
     const val NUMBER_ZERO = 0
     const val NUMBER_30 = 30
     const val API_BACKOFF_EXP = 2

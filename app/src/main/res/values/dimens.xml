@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="product_item_min_height">200dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="item_horizontal_margin">8dp</dimen>
-    <dimen name="comment_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="comment_padding">8dp</dimen>
-    <dimen name="comment_minHeight">64dp</dimen>
-    <dimen name="default_padding">16dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_view_padding">8dp</dimen>
+    <dimen name="text_view_margin">16dp</dimen>
+    <dimen name="name_text_size">18sp</dimen>
+    <dimen name="name_text_max_length">30</dimen>
+    <dimen name="default_text_size">16sp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="recycle_view_padding">6dp</dimen>
+    <dimen name="error_view_padding">8dp</dimen>
 </resources>

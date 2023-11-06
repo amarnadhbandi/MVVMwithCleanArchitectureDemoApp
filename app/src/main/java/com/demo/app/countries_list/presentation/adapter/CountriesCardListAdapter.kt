@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.demo.app.countries_list.data.local.entity.CountryEntity
 import com.demo.app.databinding.CountryRowBinding
-import com.demo.app.utils.Constants.NUMBER_30
-import com.demo.app.utils.Constants.NUMBER_ZERO
+import com.demo.app.utils.Constants.COMMA_OPERATOR
 
 /**
  * [RecyclerView.Adapter]
@@ -31,20 +30,13 @@ class CountryListAdapter :
     inner class CountryViewHolder(private val binding: CountryRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val tvCountryName = binding.name
+        private val tvCountryRegion = binding.region
         private val tvCountryCode = binding.code
         private val tvCountryCapital = binding.capital
 
-        private fun ellipsize(name: String?, region: String?): String {
-            val ellipseStr = ".., $region"
-            return if (name?.length ?: NUMBER_ZERO > NUMBER_30) {
-                "${name?.substring(0, 30)}$ellipseStr"
-            } else {
-                "$name, $region"
-            }
-        }
-
         fun bind(data: CountryEntity) {
-            tvCountryName.text = ellipsize(data.name, data.region)
+            tvCountryName.text = data.name
+            tvCountryRegion.text = COMMA_OPERATOR + data.region
             tvCountryCode.text = data.code
             tvCountryCapital.text = data.capital
         }
