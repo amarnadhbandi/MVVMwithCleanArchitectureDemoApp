@@ -7,18 +7,17 @@ navigate to com.demo.app.utils.Constants replace https://YourUrl with your URL  
 const val BASE_URL = "https://YourUrl" 
 
 MVVM with Clean Architecture:
-____________________________________________
+---------------------------------------------
 UI 
 Presenter/ViewModel     -> Presentation Layer    
-____________________________________________
+---------------------------------------------
 
 UseCases + Entity   ->  Business/Domain Layer
-______________________________________________
+---------------------------------------------
 
-Repository
-DataSource                    -> Data Layer
-______________________________________________
-
+Repository, 
+DataSource                     -> Data Layer
+---------------------------------------------
 
 Reponse sample : 
 [
