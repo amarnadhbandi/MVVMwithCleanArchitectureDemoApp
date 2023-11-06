@@ -77,6 +77,7 @@ class CountriesListFragment : Fragment() {
         when (countriesListViewState) {
             is CountriesListViewState.Loading -> showLoading()
             is CountriesListViewState.Success -> showData(countriesListViewState.data)
+            is CountriesListViewState.LocalData -> showData(countriesListViewState.data)
             is CountriesListViewState.Error -> showError(countriesListViewState.message)
         }
     }

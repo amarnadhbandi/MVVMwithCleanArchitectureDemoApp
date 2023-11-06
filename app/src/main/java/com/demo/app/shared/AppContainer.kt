@@ -2,11 +2,10 @@ package com.demo.app.shared
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.ConnectivityManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.demo.app.shared.data.repository.remote.RetrofitFactory
-import com.demo.app.shared.business.NetworkConnectionHandler
+import com.demo.app.shared.business.NetworkConnectivityObserver
 import com.demo.app.shared.data.repository.local.AppDatabase
 import com.demo.app.countries_list.data.remote.CountriesApiService
 import com.demo.app.countries_list.business.CountriesApiResponseHandler
@@ -38,16 +37,13 @@ class AppContainer private constructor(private val context: Context) {
     }
 
     private val countriesApiService: CountriesApiService = RetrofitFactory.getRetrofitService()
-    private val countriesRepositoryImpl = CountriesApiApiRepositoryImpl(countriesApiService)
-    private val countriesApiResponseHandler = CountriesApiResponseHandler(countriesRepositoryImpl)
+    private val countriesRepositoryImpl = CountriesApiApiRepositoryImpl(apiService = countriesApiService)
+    private val countriesApiResponseHandler = CountriesApiResponseHandler(apiRepositoryImpl = countriesRepositoryImpl)
 
-    private val countryDao: CountriesDao = AppDatabase.getDatabase(context).countryDao()
-    private val countriesLocalRepository = CountriesDatabaseRepository(countryDao)
+    private val countriesDao: CountriesDao = AppDatabase.getDatabase(context = context).countryDao()
+    private val countriesLocalRepository = CountriesDatabaseRepository(countriesDao = countriesDao)
 
-    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    private val networkConnectionHandler = NetworkConnectionHandler(connectivityManager)
-
+    private val networkConnectivityObserver = NetworkConnectivityObserver(context = context)
 
     private fun provideGetGetCountriesListUseCase(): GetCountriesListUseCase {
         return GetCountriesListUseCase(
@@ -60,7 +56,7 @@ class AppContainer private constructor(private val context: Context) {
             fragment,
             CountriesListViewModelFactory(
                 getCountriesListUseCase = this.provideGetGetCountriesListUseCase(),
-                networkConnectionHandler = this.networkConnectionHandler
+                networkConnectivityObserver = this.networkConnectivityObserver
             )
         )[(CountriesListViewModel::class.java)]
     }
