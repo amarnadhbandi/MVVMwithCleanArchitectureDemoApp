@@ -36,7 +36,7 @@ class AppContainer private constructor(private val context: Context) {
         }
     }
 
-    private val countriesApiService: CountriesApiService = RetrofitFactory.getRetrofitService()
+    private val countriesApiService: CountriesApiService = RetrofitFactory.getRetrofitService(context = context)
     private val countriesRepositoryImpl = CountriesApiApiRepositoryImpl(apiService = countriesApiService)
     private val countriesApiResponseHandler = CountriesApiResponseHandler(apiRepositoryImpl = countriesRepositoryImpl)
 
