@@ -12,7 +12,7 @@ UI
 Presenter/ViewModel     -> Presentation Layer    
 
 
-UseCases + Entity   ->  Business/Domain Layer
+UseCases + Models   ->  Business/Domain Layer
 
 
 Repository, 
