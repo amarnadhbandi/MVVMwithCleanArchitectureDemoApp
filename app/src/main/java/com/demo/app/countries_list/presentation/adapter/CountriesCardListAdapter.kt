@@ -29,16 +29,9 @@ class CountryListAdapter :
 
     inner class CountryViewHolder(private val binding: CountryRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private val tvCountryName = binding.name
-        private val tvCountryRegion = binding.region
-        private val tvCountryCode = binding.code
-        private val tvCountryCapital = binding.capital
 
-        fun bind(data: CountryEntity) {
-            tvCountryName.text = data.name
-            tvCountryRegion.text = COMMA_OPERATOR + data.region
-            tvCountryCode.text = data.code
-            tvCountryCapital.text = data.capital
+        fun bind(country: CountryEntity) {
+            binding.country = country
         }
     }
 }

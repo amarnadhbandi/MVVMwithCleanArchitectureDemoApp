@@ -66,6 +66,8 @@ class CountriesListFragment : Fragment() {
                 )
             )
             _bindingRecyclerView.adapter = _countryListAdapter
+            _fragmentContainerView.lifecycleOwner = viewLifecycleOwner
+            _fragmentContainerView.viewModel = _viewModel
 
             _viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
                 updateUi(uiState)
@@ -77,7 +79,6 @@ class CountriesListFragment : Fragment() {
         when (countriesListViewState) {
             is CountriesListViewState.Loading -> showLoading()
             is CountriesListViewState.Success -> showData(countriesListViewState.data)
-            is CountriesListViewState.LocalData -> showData(countriesListViewState.data)
             is CountriesListViewState.Error -> showError(countriesListViewState.message)
         }
     }
