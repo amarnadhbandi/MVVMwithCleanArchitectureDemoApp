@@ -21,7 +21,7 @@ import com.demo.app.databinding.CountryListFragmentBinding
  */
 class CountriesListFragment : Fragment() {
 
-    private val TAG = this@CountriesListFragment::class.java.simpleName
+    private val TAG = CountriesListFragment::class.java.simpleName
     private lateinit var _viewModel: CountriesListViewModel
     private lateinit var _countryListAdapter: CountryListAdapter
     private lateinit var _fragmentContainerView: CountryListFragmentBinding
@@ -66,6 +66,8 @@ class CountriesListFragment : Fragment() {
                 )
             )
             _bindingRecyclerView.adapter = _countryListAdapter
+            _fragmentContainerView.lifecycleOwner = viewLifecycleOwner
+            _fragmentContainerView.viewModel = _viewModel
 
             _viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
                 updateUi(uiState)
