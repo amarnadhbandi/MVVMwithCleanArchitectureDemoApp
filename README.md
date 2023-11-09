@@ -18,6 +18,23 @@ UseCases + Models   ->  Business/Domain Layer
 Repository, 
 DataSource                     -> Data Layer
 
+Notes: 
+
+Chosen Clean Architecture to implement API
+Focused more into network API logic and workflow
+Manual DI by using AppContainer
+Implemented local repository RoomDB
+Implemented remote api with caching Retrofit
+Basically two Handlers used
+a. UI - CountriesLisViewState 
+b. NetworkApi - ResultHandler
+ Implementation – error handling is very important
+Used DiffUtil for optimization
+Used Fragment, Usecase, list adapter
+Use domain layer with mapper, submitList, manual DI
+Orientation support with single screen Fragment 
+Added few debug logs to understand flow
+Missing Unit Test case, might need some more time 
 
 Reponse sample : 
 [
