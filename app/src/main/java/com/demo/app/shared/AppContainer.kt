@@ -27,12 +27,10 @@ class AppContainer private constructor(private val context: Context) {
             if (instance == null) instance = AppContainer(context)
         }
         fun getInstance(): AppContainer {
-            synchronized(this) {
-                if (instance == null) {
-                    throw IllegalStateException("$ERROR $APP_CONTAINER_NOT_INIT")
-                }
-                return instance!!
+           instance?.let {
+                return it
             }
+            throw IllegalStateException("$ERROR $APP_CONTAINER_NOT_INIT")
         }
     }
 

@@ -21,36 +21,35 @@ class GetCountriesListUseCase(
     private val TAG = GetCountriesListUseCase::class.java.simpleName
 
     suspend fun execute(networkConnectionStatus: Boolean): Flow<ResultHandler<List<CountryEntity>>> {
-        return withContext(Dispatchers.IO) {
-            flow {
-                try {
-                    Log.i(TAG,"execute() : networkConnectionStatus $networkConnectionStatus")
-                    if (networkConnectionStatus) {
-                        fetchFromRemoteApiAndCache().collect() { response ->
-                            Log.d(TAG, "execute data:  ${response.data}")
-                            Log.d(TAG, "execute message:  ${response.message}")
-                            when (response) {
-                                is ResultHandler.Success -> {
-                                    response.data?.let {
-                                        emit(ResultHandler.Success(it))
-                                    }
+        return flow {
+            try {
+                Log.i(TAG, "execute() : networkConnectionStatus $networkConnectionStatus")
+                if (networkConnectionStatus) {
+                    fetchFromRemoteApiAndCache().let { response ->
+                        Log.d(TAG, "execute data:  ${response.data}")
+                        Log.d(TAG, "execute message:  ${response.message}")
+                        when (response) {
+                            is ResultHandler.Success -> {
+                                response.data?.let {
+                                    emit(ResultHandler.Success(it))
                                 }
-                                is ResultHandler.Error -> {
-                                    response.message?.let {
-                                        emit(fetchFromLocalDataBase(it))
-                                    }
+                            }
+
+                            is ResultHandler.Error -> {
+                                response.message?.let {
+                                    emit(fetchFromLocalDataBase(it))
                                 }
                             }
                         }
-                    } else {
-                        emit(fetchFromLocalDataBase("$ERROR $NO_NETWORK"))
                     }
-                } catch (e: Exception) {
-                    Log.e(this.javaClass.simpleName, "$ERROR ${e.localizedMessage}")
-                    emit(fetchFromLocalDataBase("$ERROR ${e.localizedMessage}"))
+                } else {
+                    emit(fetchFromLocalDataBase("$ERROR $NO_NETWORK"))
                 }
-            }.flowOn(Dispatchers.IO)
-        }
+            } catch (e: Exception) {
+                Log.e(this.javaClass.simpleName, "$ERROR ${e.localizedMessage}")
+                emit(fetchFromLocalDataBase("$ERROR ${e.localizedMessage}"))
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
     private suspend fun fetchFromLocalDataBase(message: String): ResultHandler<List<CountryEntity>> {
@@ -61,36 +60,36 @@ class GetCountriesListUseCase(
         return ResultHandler.Error(message.ifEmpty { "$ERROR $NO_LOCAL_DATA" })
     }
 
-    private suspend fun fetchFromRemoteApiAndCache(): Flow<ResultHandler<List<CountryEntity>>> {
-        return withContext(Dispatchers.IO) {
-            flow {
-                try {
-                    Log.i(TAG, "fetchFromRemoteApiAndCache()")
-                    apiResponseHandler.getCountryList().collect() { response ->
-                        when (response) {
-                            is ResultHandler.Success -> {
-                                if (response.data!!.isNotEmpty()) {
-                                    val resultHandler = ResultHandler.Success(response.data.toEntityList())
-                                    emit(resultHandler)
-                                    resultHandler.data?.map {
-                                        localRepository.insertCountry(it)
-                                    }
-                                } else if (response.data.isNullOrEmpty() || response.message!!.isNotEmpty()) {
-                                    emit(ResultHandler.Error(response.message?: IllegalStateException(EXCEPTION_EMPTY_LIST).localizedMessage))
-                                }
+    private suspend fun fetchFromRemoteApiAndCache(): ResultHandler<List<CountryEntity>> {
+        Log.i(TAG, "fetchFromRemoteApiAndCache()")
+        var resultHandler: ResultHandler<List<CountryEntity>>
+        apiResponseHandler.getCountryList().let { response ->
+            when (response) {
+                is ResultHandler.Success -> {
+                    if (response.data!!.isNotEmpty()) {
+                        resultHandler = ResultHandler.Success(response.data.toEntityList())
+                        try {
+                            resultHandler.data?.map {
+                                localRepository.insertCountry(it)
                             }
-                            is ResultHandler.Error -> {
-                                if (response.message!!.isNotEmpty()) {
-                                    emit(ResultHandler.Error(response.message))
-                                }
-                            }
+                        } catch (e: java.lang.Exception) {
+                            error("$ERROR : ${e.localizedMessage}")
                         }
+                    } else {
+                        resultHandler = ResultHandler.Error(
+                            response.message
+                                ?: IllegalStateException(EXCEPTION_EMPTY_LIST).localizedMessage
+                        )
                     }
-                } catch (e: Exception) {
-                    Log.e(this.javaClass.simpleName, "$ERROR ${e.localizedMessage}")
-                    emit(ResultHandler.Error("$ERROR ${e.localizedMessage}"))
                 }
-            }.flowOn(Dispatchers.IO)
+
+                is ResultHandler.Error -> {
+                    response.message!!.isNotEmpty().let {
+                        resultHandler = ResultHandler.Error(response.message)
+                    }
+                }
+            }
         }
+        return resultHandler
     }
 }

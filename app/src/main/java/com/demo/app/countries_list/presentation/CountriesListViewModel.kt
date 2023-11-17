@@ -65,35 +65,27 @@ class CountriesListViewModel(
         }
     }
 
-    @Synchronized
     private fun makeApiCallToGetCountriesList() {
         if (!isApiFetchDataTrigger) {
-            apiRequestJob = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        _uiState.value = CountriesListViewState.Loading
-                        isApiFetchDataTrigger = true
-                        getCountriesListUseCase.execute(networkConnectionStatus = isNetworkConnected)
-                            .collect { response ->
-                                when (response) {
-                                    is ResultHandler.Success -> {
-                                        if (response.data!!.isNotEmpty()) {
-                                            _countries.value = response.data.toMutableList()
-                                            _uiState.value = Success(_countries.value!!)
-                                            isApiFetchDataTrigger = isNetworkConnected
-                                        }
-                                    }
-
-                                    is ResultHandler.Error -> {
-                                        error(response.message!!)
-                                    }
+            apiRequestJob = viewModelScope.launch(exceptionHandler) {
+                _uiState.value = CountriesListViewState.Loading
+                isApiFetchDataTrigger = true
+                getCountriesListUseCase.execute(networkConnectionStatus = isNetworkConnected)
+                    .collect { response ->
+                        when (response) {
+                            is ResultHandler.Success -> {
+                                if (response.data!!.isNotEmpty()) {
+                                    _countries.value = response.data.toMutableList()
+                                    _uiState.value = Success(_countries.value!!)
+                                    isApiFetchDataTrigger = isNetworkConnected
                                 }
                             }
 
-                    } catch (e: Exception) {
-                        error("$ERROR : ${e.localizedMessage}")
+                            is ResultHandler.Error -> {
+                                error(response.message!!)
+                            }
+                        }
                     }
-                }
             }
         }
     }
